@@ -1,21 +1,19 @@
 #include "get_next_line.h"
 #include <fcntl.h>
 #include <stdio.h>
-
+void testfun()
+{
+    static int a = 0;
+    int b = 0;
+    a++;
+    b++;
+    printf("%d  %d \n" , a , b);
+}
 int main()
 {
-    int fd = open("p.txt",O_RDONLY);
-    char *buf = malloc(BUFFER_SIZE + 1);
-    int bytes = read(fd,buf,BUFFER_SIZE);
-    int count = 0 ;
-    while(bytes > 0)
-    {
-        buf[bytes] = '\0';
-        write(1,&buf[count],1);
-        count++;
-        bytes--;
-        bytes = read(fd,buf,BUFFER_SIZE);
-    }
-    free(buf);
-    close(fd);
+    testfun();
+    testfun();
+    testfun();
+    testfun();
+
 }
