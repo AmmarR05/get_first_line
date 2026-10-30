@@ -11,9 +11,4 @@ void testfun()
 }
 int main()
 {
-    testfun();
-    testfun();
-    testfun();
-    testfun();
-
 }
