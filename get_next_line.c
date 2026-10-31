@@ -28,6 +28,11 @@ char *get_next_line(int fd)
     if(byte != -1)
       buffer[byte] = '\0'; 
   }
+  if (temp == NULL || temp[0] == '\0')
+  {
+    free(buffer);
+    return (NULL);
+  } 
   while(temp[i])
   {
     if(temp[i] == '\n')
@@ -52,21 +57,14 @@ char *get_next_line(int fd)
   }
   old = temp;
   if(temp != NULL)
-    temp = ft_substr(old,len,ft_strlen(old) - len);
+      temp = ft_substr(old,len,ft_strlen(old) - len);
   free(old);
+  if (temp != NULL && temp[0] == '\0')
+  {
+    free(temp);
+    temp = NULL;
+  }
   free(buffer);
   return str;
 } 
-#include "stdio.h"
-#include <fcntl.h>
-int main()
-{
-  int fd = open("p.txt", O_RDONLY);
-  printf("%s",get_next_line(fd));
-  printf("%s",get_next_line(fd));
-  printf("%s",get_next_line(fd));
-  printf("%s",get_next_line(fd));
-
-
-}
 // ammarrida\n
