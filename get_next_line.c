@@ -25,7 +25,13 @@ char *get_next_line(int fd)
     if(ft_strchr(temp ,'\n') != NULL)
       break;
     byte = read(fd,buffer,BUFFER_SIZE);
-    if(byte != -1)
+    if(byte == -1)
+    {
+      free(temp);
+      free(buffer);
+      temp = NULL;
+      return NULL;
+    }
       buffer[byte] = '\0'; 
   }
   if (temp == NULL || temp[0] == '\0')
@@ -66,5 +72,4 @@ char *get_next_line(int fd)
   }
   free(buffer);
   return str;
-} 
-// ammarrida\n
+}

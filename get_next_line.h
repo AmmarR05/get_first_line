@@ -1,6 +1,8 @@
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
-#define BUFFER_SIZE 5
+# ifndef BUFFER_SIZE
+#define BUFFER_SIZE 1
+# endif
 #include <unistd.h>
 #include <stdlib.h>
 char    *get_next_line(int fd);
