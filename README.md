@@ -29,7 +29,7 @@ Return value:
 Files:
 
 - `get_next_line.c`: the main function.
-- `get_next_line_utils.c`: helper functions (`ft_strlen`, `ft_strjoin`, `ft_strchr`, `ft_substr`).
+- `get_next_line_utils.c`: helper functions (`ft_strlen`, `ft_strjoin`,`ft_substr`).
 - `get_next_line.h`: prototypes and the `BUFFER_SIZE` default.
 - `get_next_line_bonus.c`, `get_next_line_utils_bonus.c`, `get_next_line_bonus.h`: the bonus version (several file descriptors at once, see [Bonus](#bonus)).
 
