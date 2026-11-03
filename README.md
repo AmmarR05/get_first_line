@@ -31,6 +31,7 @@ Files:
 - `get_next_line.c`: the main function.
 - `get_next_line_utils.c`: helper functions (`ft_strlen`, `ft_strjoin`, `ft_strchr`, `ft_substr`).
 - `get_next_line.h`: prototypes and the `BUFFER_SIZE` default.
+- `get_next_line_bonus.c`, `get_next_line_utils_bonus.c`, `get_next_line_bonus.h`: the bonus version (several file descriptors at once, see [Bonus](#bonus)).
 
 ## Instructions
 
@@ -71,6 +72,12 @@ int main(void)
 
 To read from standard input, use `fd = 0`.
 
+### Bonus compilation
+
+```bash
+cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line_bonus.c get_next_line_utils_bonus.c main.c -o gnl_bonus
+```
+
 ### Memory check
 
 ```bash
@@ -102,6 +109,31 @@ Each call to `get_next_line` does this:
 
 Reading a line of length `L` with a buffer of size `B` takes about `L / B` reads. Since each `ft_strjoin` copies the accumulated string, the cost for very long lines (with a small `BUFFER_SIZE`) grows quadratically with the number of reads. For normal line lengths this is negligible, and it is the trade-off for a simple and safe implementation.
 
+## Bonus
+
+The bonus version can read from **several file descriptors at the same time**, using **only one static variable**. You can call it for fd 3, then fd 4, then fd 5, then fd 3 again, and each file descriptor continues exactly from where it stopped, without mixing lines between files.
+
+```c
+line = get_next_line(fd3);   /* first line of file 3 */
+line = get_next_line(fd4);   /* first line of file 4 */
+line = get_next_line(fd3);   /* second line of file 3 */
+```
+
+### Bonus algorithm
+
+The reading logic is exactly the same as in the mandatory part. The only change is **where the leftover data is stored**:
+
+- Mandatory: `static char *temp;`, one leftover string for the whole program.
+- Bonus: `static char *temp[1024];`, one leftover string **per file descriptor**, and each call works on `temp[fd]`.
+
+Each call to `get_next_line(fd)` only reads, extracts and updates `temp[fd]`, so the leftover of one file descriptor is never touched by a call on another one. The array is a single static variable, so the "only one static variable" rule is respected. If a file descriptor is negative or does not fit in the array, the function returns `NULL`.
+
+### Why an array
+
+- **Direct access:** `temp[fd]` finds the state of any file descriptor immediately, with no searching.
+- **Simple memory management:** no nodes to create, search or delete. When a file is finished, `temp[fd]` is freed and set to `NULL`, like in the mandatory part.
+- **Trade-off:** the number of file descriptors is limited by the array size (1024 is the usual default limit of open files per process), and the array uses a fixed amount of static memory (about 8 KB on a 64-bit system) even if only one file is read. A linked list would remove this limit, but it needs more code and more memory handling.
+
 ## Resources
 
 - `man 2 read`: behavior of the `read` system call and its return values.
@@ -117,6 +149,7 @@ AI (Claude) was used as a helper, not to write the project:
 - **Understanding the subject:** explaining what the project requires and what each function does.
 - **Code review:** pointing out possible memory leaks and unhandled failures of `read`, `malloc`, `ft_strjoin` and `ft_substr`, and explaining why `temp` must be set to `NULL` after being freed.
 - **Refactoring advice:** suggesting how to split the main function into smaller ones.
+- **Bonus design:** discussing the options to keep one reading state per file descriptor (array or linked list).
 - **Documentation:** drafting this README.
 
 All the code was written, tested and understood by the author.
